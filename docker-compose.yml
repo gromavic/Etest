@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  php:
+    build: './php'
+    container_name: php
+    volumes:
+      - ./online-shopping-system-advanced:/var/www/html
+  apache:
+    build: './apache'
+    depends_on:
+      - php
+      - db
+    container_name: apache
+    ports:
+    - '80:80'
+    volumes:
+    - ./online-shopping-system-advanced:/var/www/html
+  db:
+    image: mariadb
+    container_name: db
+    ports:
+      - "9906:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: onlineshop
+    volumes:
+        - ./online-shopping-system-advanced/database/onlineshop.sql:/docker-entrypoint-initdb.d/onlineshop.sql
+        - ./db:/var/lib/mysql/:rw
